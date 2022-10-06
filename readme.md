@@ -12,13 +12,12 @@ This is the development repo for [Solana API](https://docs.solana.com/developing
 
 ### Getting Started
 
-0. Copy `.env.sample` to `bin/.env`
-1. Clone this repository down to your computer.
-2. `chmod +x install.sh` (this just makes it executable)
+1. Clone this repository to your computer.
+2. Copy `.env.sample` to `.env`.  No changes are necessary at this time.
 3. Make sure docker or other container software is running.
-4. `./install.sh`
-5. Wait a few minutes. The install script is running the full docker setup and the Lucee server can take a few minutes to fully initialize.
-6. Open web browser to `localhost:8080`
+4. From the command line, while in the project root folder, run `docker-compose build` to initially set up the environment.  This is a one time process unless you destroy your docker containers.
+5. From the command line, while in the project root folder, run `docker-compose up` to start the docker environment.  This includes the ColdFusion Lucee application server, the MySQL database server, and a Redis caching server.
+6. Open a web browser to `localhost:8080`
 7. Follow through the ContentBox wizard to setup the first user of the CMS.
 8. Use a tool like Postman to query the APIs.
 9. Note: for most API calls you will need to authorize through the User login route, using the username and password signed up with on the ContentBox wizard.
@@ -31,15 +30,15 @@ To support Apple M1 chips, we are adding `platform: linux/amd64` to the docker c
 
 **Question**: How do I do local development?
 
-**Answer**: We are mounting the necessary files needed for development in to the docker container via volume mount points. You can see specifically what we are mounting in `bin/docker-compose.yml` under the `cf-solana` service's `volumes` section. When this container is running, the files mounted from the local file system are automatically synced to the docker container file system. These changes are synced both ways, so a change made on the local filesystem will update in docker and updates in docker will update on local filesystem. *This will only happen for the files mounted*.
+**Answer**: We are mounting the necessary files needed for development in to the docker container via volume mount points.  All of the customizable files for the installation are included in the `/modules_app/contentbox-custom/` folder of this repository.  After editing any of these files, you will need to reload the application using the command line command `coldbox reinit` or via the web browser by appending `/?fwreinit=contentbox` to the url.
 
 **Question**: Where are the database and container environment variable configurations?
 
-**Answer**: The MySQL environment variables are set in `bin/.env` that are then used in the `bin/docker-compose.yml` to be passed in to the docker containers for initialization.
+**Answer**: The MySQL environment variables are set in the `.env` and are then used in the `docker-compose.yml` file to be passed in to the docker containers for initialization.  The database files themselves are stored in the `./db/mysql8/data` folder which is NOT committed to the repository.  Each time you restart your docker environment, any files in this folder will be loaded into the database so that you can pick up where you left off.
 
 **Question**: How do I manually restart the ColdBox server from within the docker container?
 
-**Answer**: Navigate to the installation directory, in our case that is `/app`. From there, run `box` to initialize the ColdBox REPL. Then, once it is loaded you should see the commandbox the welcome message. Run `server stop` to stop the server. You can verify what the status of the server is by running `server list`. Then, to restart the server run `server start host=0.0.0.0 port=8080 openbrowser=false verbose=true`. It is important that the server is run on `0.0.0.0` so that it is accessible to outside of the container without using something like NGINX. 
+**Answer**: From the command line, while in the project root folder, run `box` to initialize the ColdBox REPL. Then, once it is loaded you should see the commandbox ASCII art welcome message. Run `server stop` to stop the server. You can verify what the status of the server is by running `server list`. Then, to restart the server run `server start openbrowser=false verbose=true`.
 
 **Question**: How do I enter a docker container from the command line?
 
@@ -51,7 +50,7 @@ To support Apple M1 chips, we are adding `platform: linux/amd64` to the docker c
 
 **Question**: How do I send emails through SMTP on development server?
 
-**Answer**: when running ContentBox in development mode, emails are never sent via SMTP.  They are always logged to the file system. You can find the email logs in the ContentBox installation folder under /config/logs/mail/. When run in production mode, the admin SMTP settings are honored and if not specified, they default back to the CF Admin mail settings.
+**Answer**: when running ContentBox in development mode, emails are never sent via SMTP.  They are always logged to the file system. You can find the email logs in the ContentBox installation folder under `/config/logs/mail/`. When run in production mode, the admin SMTP settings are honored and if not specified, they default back to the CF Admin mail settings.
 
 **Question**: How do I send emails through SMTP on staging or production?
 

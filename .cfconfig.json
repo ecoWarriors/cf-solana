@@ -1,29 +1,19 @@
 {
-	"systemErr":"System",
-	"systemOut":"System",
-	"componentCacheEnabled":false,
-	"saveClassFiles":false,
-	"robustExceptionEnabled":true,
-	"debuggingEnabled" : true,
 	"adminPassword" : "contentbox",
-	"requestTimeout": "0,0,10,0",
-	"thistimezone":"UTC",
-	"debuggingReportExecutionTimes": false,
-    "whitespaceManagement":"white-space-pref",
-	"postParametersLimit" : 200,
-	"cacheDefaultObject":"contentbox",
+    "cacheDefaultObject":"contentbox",
     "caches":{
         "contentbox":{
-            "storage":"true",
-            "type":"RAM",
+            "class":"lucee.runtime.cache.ram.RamCache",
             "custom":{
                 "timeToIdleSeconds":"1800",
                 "timeToLiveSeconds":"3600"
             },
-            "class":"lucee.runtime.cache.ram.RamCache",
-            "readOnly":"false"
+            "readOnly":"false",
+            "storage":"true",
+            "type":"RAM"
 		}
     },
+	"componentCacheEnabled":false,
 	"datasources" : {
 		"contentbox":{
             "allowAlter":true,
@@ -53,5 +43,15 @@
             "username":"${DB_USER}",
 			"validate":"false"
 		}
-	}
+	},
+	"debuggingEnabled" : true,
+	"debuggingReportExecutionTimes": false,
+	"postParametersLimit" : 200,
+	"requestTimeout": "0,0,10,0",
+	"robustExceptionEnabled":true,
+	"saveClassFiles":false,
+	"systemErr":"System",
+	"systemOut":"System",
+	"thistimezone":"UTC",
+    "whitespaceManagement":"white-space-pref"
 }

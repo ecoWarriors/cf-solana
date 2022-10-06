@@ -1,0 +1,89 @@
+version: "3.9"
+
+services:
+
+  # MySQL Server 8
+  mysql:
+    container_name: cfsolana-mysql
+    platform: linux/x86_64 # Needed for Mac's on the M1 chip
+    image: mysql:8
+    ports: 
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_TCP_PORT: 3306
+    volumes:
+      # Store the data locally
+      - .db/mysql8/data:/var/lib/mysql
+      # Seed the database with our prepared sql data
+      #- ../tests/resources/sql/mysql:/docker-entrypoint-initdb.d
+ 
+  # Redis Cache
+  redis:
+    container_name: cfsolana-redis
+    platform: linux/x86_64 # Needed for Mac's on the M1 chip
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - .db/redis:/data
+
+  lucee:
+    container_name: cfsolana-lucee
+    platform: linux/x86_64 # Needed for Mac's on the M1 chip
+    image: ortussolutions/contentbox:latest-snapshot
+    depends_on:
+      - mysql
+    env_file: ./.env
+    environment:
+      CFCONFIG_ADMINPASSWORD: contentbox
+
+      # Use the ContentBox Installer
+      INSTALL: "true"
+
+      # Use the Bleeding Edge version of ContentBox
+      #BE: "true"
+
+      # JVM Heap Size
+      #JVM_HEAPSIZE: 512
+
+      # HealthCheck URI
+      HEALTHCHECK_URI: "http://127.0.0.1:8080/index.cfm"
+
+      # Framework Reinit Password
+      #FWREINIT_PW: "contentbox"
+
+      # Session Storage Location: Defaults to jdbc
+      #SESSION_STORAGE: memory, cookie, datasourceName, cacheName (jdbc)
+
+      # Distributed CacheBox cache region for distributing ContentBox content, flash, sitemaps, etc Default is jdbc
+      #DISTRIBUTED_CACHE: default, template or jdbc
+
+      # Turn on the ORM secondary cache via ehcache
+      #ORM_SECONDARY_CACHE: "false"
+
+      # The specific ORM dialect, use if you are using a specific external database
+      #ORM_DIALECT: 
+
+      # Remove the cbadmin module, so this becomes a headless ContentBox UI
+      #REMOVE_CBADMIN: false
+
+    ports:
+      # HTTP
+      - "8080:8080"
+      # HTTPS
+      - "8443:8443"
+
+    volumes:
+      # Support for custom environment variables and server configuration
+      - ./.env:/app/.env
+      - ./.cfconfig.json:/app/.cfconfig.json
+
+      # Importing custom modules for ContentBox ... all custom could should go here
+      - ./modules_app:/app/modules_app
+
+      # Mounting the logs folder locally so that we can see the system logs
+      - ./logs:/app/config/logs 

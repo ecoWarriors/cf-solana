@@ -8,5 +8,3 @@ curl -k  -o /tmp/box.zip -location "https://s3.amazonaws.com/downloads.ortussolu
 unzip /tmp/box.zip -d ${BIN_DIR} && chmod 755 ${BIN_DIR}/box
 
 echo "commandbox_home=${COMMANDBOX_HOME}" > ${BIN_DIR}/commandbox.properties
-
-box install cors contentbox-cli

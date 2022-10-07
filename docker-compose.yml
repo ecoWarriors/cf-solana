@@ -4,9 +4,9 @@ services:
 
   # MySQL Server 8
   mysql:
-    container_name: cfsolana-mysql
+    container_name: ${MYSQL_CONTAINER_NAME}
     platform: linux/x86_64 # Needed for Mac's on the M1 chip
-    image: mysql:8
+    image: docker.io/mysql:8
     ports: 
       - "3306:3306"
     environment:
@@ -23,18 +23,18 @@ services:
  
   # Redis Cache
   redis:
-    container_name: cfsolana-redis
+    container_name: ${REDIS_CONTAINER_NAME}
     platform: linux/x86_64 # Needed for Mac's on the M1 chip
-    image: redis
+    image: docker.io/redis
     ports:
       - "6379:6379"
     volumes:
       - .db/redis:/data
 
   lucee:
-    container_name: cfsolana-lucee
+    container_name: ${LUCEE_CONTAINER_NAME}
     platform: linux/x86_64 # Needed for Mac's on the M1 chip
-    image: ortussolutions/contentbox:latest-snapshot
+    image: docker.io/ortussolutions/contentbox:latest-snapshot
     depends_on:
       - mysql
     env_file: ./.env

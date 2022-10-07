@@ -56,3 +56,10 @@ To support Apple M1 chips, we are adding `platform: linux/amd64` to the docker c
 
 **Answer**: Yes, in production mode ContentBox will send via SMTP and can use any SMTP server that is reachable (i.e. network security, etc.)
 
+**Question**: I am getting a message about aardvark-dns not being available. What is this?
+
+**Answer**: aardvark-dns is Podman's new container DNS resolver; it is used to communicate with containers on the same network. Consequently, you will need to install it on the host machine with your operating system's package manager.
+
+**Question**: I am getting a database connection issue with Podman the first time I start the containers.
+
+**Answer**: This is a known problem that I have been encountering also; I think it is a startup lag where things are still coming up. Simply waiting it out and refreshing the page from time to time fixes this. If there is a real problem and it does not come up, please do follow an issue. This problem also manifests itself with a browser message like "connection was reset" or some similar verbiage.

@@ -63,3 +63,14 @@ To support Apple M1 chips, we are adding `platform: linux/amd64` to the docker c
 **Question**: I am getting a database connection issue with Podman the first time I start the containers.
 
 **Answer**: This is a known problem that I have been encountering also; I think it is a startup lag where things are still coming up. Simply waiting it out and refreshing the page from time to time fixes this. If there is a real problem and it does not come up, please do follow an issue. This problem also manifests itself with a browser message like "connection was reset" or some similar verbiage.
+
+**Question**: How can I cleanup local Docker instances running?
+
+**Answer**:
+
+```bash
+docker stop $(docker ps -aq)
+docker system prune --all --force
+docker volume rm $(docker volume ls -q)
+```
+This will stop all containers and remove the volumes.

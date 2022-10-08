@@ -13,14 +13,11 @@ This is the development repo for [Solana API](https://docs.solana.com/developing
 ### Getting Started
 
 1. Clone this repository to your computer.
-2. Copy `.env.sample` to `.env`.  No changes are necessary at this time.
+2. Copy `.env.dev` to `.env`.  No changes are necessary at this time.
 3. Make sure docker or other container software is running.
-4. From the command line, while in the project root folder, run `docker-compose build` to initially set up the environment.  This is a one time process unless you destroy your docker containers.
-5. From the command line, while in the project root folder, run `docker-compose up` to start the docker environment.  This includes the ColdFusion Lucee application server, the MySQL database server, and a Redis caching server.
-6. Open a web browser to `localhost:8080`
-7. Follow through the ContentBox wizard to setup the first user of the CMS.
-8. Use a tool like Postman to query the APIs.
-9. Note: for most API calls you will need to authorize through the User login route, using the username and password signed up with on the ContentBox wizard.
+4. From the command line, while in the project root folder, run `docker-compose -f docker-compose.dev.yml up -d`.
+5. Open a web browser to `localhost:8080`
+6. Follow through the ContentBox wizard to setup the first user of the CMS.
 
 **NOTE**:
 

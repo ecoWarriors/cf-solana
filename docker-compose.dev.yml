@@ -37,7 +37,7 @@ services:
     image: docker.io/ortussolutions/contentbox:latest-snapshot
     depends_on:
       - mysql
-    env_file: ./.env
+    env_file: ./.env.dev
     environment:
       CFCONFIG_ADMINPASSWORD: contentbox
 
@@ -79,7 +79,7 @@ services:
 
     volumes:
       # Support for custom environment variables and server configuration
-      - ./.env:/app/.env
+      - ./.env.dev:/app/.env
       - ./.cfconfig.json:/app/.cfconfig.json
 
       # Importing custom modules for ContentBox ... all custom could should go here

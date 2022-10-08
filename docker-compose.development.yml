@@ -8,13 +8,13 @@ services:
     platform: linux/x86_64 # Needed for Mac's on the M1 chip
     image: docker.io/mysql:8
     ports: 
-      - "3306:3306"
+      - ${MYSQL_PORT}:${MYSQL_PORT}
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_TCP_PORT: 3306
+      MYSQL_TCP_PORT: ${MYSQL_PORT}
     volumes:
       # Store the data locally
       - .db/mysql8/data:/var/lib/mysql
@@ -27,7 +27,7 @@ services:
     platform: linux/x86_64 # Needed for Mac's on the M1 chip
     image: docker.io/redis
     ports:
-      - "6379:6379"
+      - ${REDIS_PORT}:${REDIS_PORT}
     volumes:
       - .db/redis:/data
 
@@ -51,7 +51,7 @@ services:
       #JVM_HEAPSIZE: 512
 
       # HealthCheck URI
-      HEALTHCHECK_URI: "http://127.0.0.1:8080/index.cfm"
+      HEALTHCHECK_URI: http://127.0.0.1:${LUCEE_PORT}/index.cfm
 
       # Framework Reinit Password
       #FWREINIT_PW: "contentbox"
@@ -73,9 +73,9 @@ services:
 
     ports:
       # HTTP
-      - "8080:8080"
+      - ${LUCEE_PORT}:${LUCEE_PORT}
       # HTTPS
-      - "8443:8443"
+      - ${LUCEE_SSL_PORT}:${LUCEE_SSL_PORT}
 
     volumes:
       # Support for custom environment variables and server configuration

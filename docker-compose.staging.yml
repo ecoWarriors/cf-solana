@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+
+  # Redis Cache
+  redis:
+    container_name: ${REDIS_CONTAINER_NAME}
+    platform: linux/x86_64 # Needed for Mac's on the M1 chip
+    image: docker.io/redis
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    volumes:
+      - .db/redis:/data
+
+  lucee:
+    container_name: ${LUCEE_CONTAINER_NAME}
+    platform: linux/x86_64 # Needed for Mac's on the M1 chip
+    image: docker.io/ortussolutions/contentbox:latest-snapshot
+    env_file: ./.env
+    environment:
+      CFCONFIG_ADMINPASSWORD: ${CONTENTBOX_ADMIN_PASSWORD}
+
+      # Use the ContentBox Installer
+      INSTALL: "true"
+
+      # Use the Bleeding Edge version of ContentBox
+      #BE: "true"
+
+      # JVM Heap Size
+      #JVM_HEAPSIZE: 512
+
+      # HealthCheck URI
+      HEALTHCHECK_URI: http://127.0.0.1:${LUCEE_PORT}/index.cfm
+
+      # Framework Reinit Password
+      #FWREINIT_PW: "contentbox"
+
+      # Session Storage Location: Defaults to jdbc
+      #SESSION_STORAGE: memory, cookie, datasourceName, cacheName (jdbc)
+
+      # Distributed CacheBox cache region for distributing ContentBox content, flash, sitemaps, etc Default is jdbc
+      #DISTRIBUTED_CACHE: default, template or jdbc
+
+      # Turn on the ORM secondary cache via ehcache
+      #ORM_SECONDARY_CACHE: "false"
+
+      # The specific ORM dialect, use if you are using a specific external database
+      #ORM_DIALECT: 
+
+    ports:
+      # HTTP
+      - ${LUCEE_PORT}:${LUCEE_PORT}
+      # HTTPS
+      - ${LUCEE_SSL_PORT}:${LUCEE_SSL_PORT}
+
+    volumes:
+      # Support for custom environment variables and server configuration
+      - ./.env:/app/.env
+      - ./.cfconfig.json:/app/.cfconfig.json
+
+      # Importing custom modules for ContentBox ... all custom could should go here
+      - ./modules_app:/app/modules_app
+
+      # Mounting the logs folder locally so that we can see the system logs
+      - ./logs:/app/config/logs 
